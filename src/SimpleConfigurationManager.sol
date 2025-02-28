@@ -7,23 +7,37 @@ contract SimpleConfigurationManager is Multicall {
     uint256 private s_uintConfig;
     address private s_addressConfig;
     mapping(address => uint256) private s_addressToUintConfig;
+    address private immutable i_owner;
+
+    error SimpleConfigurationManager__OnlyOwner();
+
+    modifier onlyOwner() {
+        if (msg.sender != i_owner) {
+            revert SimpleConfigurationManager__OnlyOwner();
+        }
+        _;
+    }
+
+    constructor() {
+        i_owner = msg.sender;
+    }
 
     /*//////////////////////////////////////////////////////////////
                                 SETTERS
     //////////////////////////////////////////////////////////////*/
 
-    function setUintConfig(uint256 _uintConfig) external {
+    function setUintConfig(uint256 _uintConfig) external onlyOwner {
         s_uintConfig = _uintConfig;
     }
 
-    function setAddressConfig(address _addressConfig) external {
+    function setAddressConfig(address _addressConfig) external onlyOwner {
         s_addressConfig = _addressConfig;
     }
 
     function setAddressToUintConfig(
         address _address,
         uint256 _uintConfig
-    ) external {
+    ) external onlyOwner {
         s_addressToUintConfig[_address] = _uintConfig;
     }
 
@@ -43,5 +57,9 @@ contract SimpleConfigurationManager is Multicall {
         address _address
     ) external view returns (uint256) {
         return s_addressToUintConfig[_address];
+    }
+
+    function getOwner() external view returns (address) {
+        return i_owner;
     }
 }
