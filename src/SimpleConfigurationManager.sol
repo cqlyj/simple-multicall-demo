@@ -42,6 +42,15 @@ contract SimpleConfigurationManager is Multicall {
     }
 
     /*//////////////////////////////////////////////////////////////
+                           PAYABLE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice This function is payable to demonstrate that only the multicall function itself payable then it can call other payable functions.
+    function addUint(uint256 _uint) external payable onlyOwner {
+        s_uintConfig += _uint;
+    }
+
+    /*//////////////////////////////////////////////////////////////
                                 GETTERS
     //////////////////////////////////////////////////////////////*/
 
